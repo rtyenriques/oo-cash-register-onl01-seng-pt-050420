@@ -1,40 +1,42 @@
 class CashRegister
-  attr_accessor :discount, :item, :last_transaction, :total
+  attr_accessor :discount, :total
+  
 
   def initialize(discount = 0)
-    @items = []
-    @discount = discount
     @total = 0
+    @discount = discount
+    @cart = []
   end
 
-  def add_item(cost, name, number = 1)
-    self.total = cost * number
-    @items << name
-  end
+  def add_item(item, price, quantity = 1)
+    item_info = {}
+    item_info[:name] = item
+    item_info[:price] = price
+    item_info[:quantity] = quantity
 
-  def add_item_2(cost, name, number = 1)
-    self.total = cost * number
+    @cart << item_info
+
+    @total += price * quantity
+
+  end
 
   def apply_discount
-  # the cash register was initialized with an employee discount:
-    # applies the discount to the total price
-    # returns success message with updated total
-    # reduces the total
-
-  # the cash register was *NOT* initialized with an employee discount:
-    # returns a string error message that there is no discount to appply
-  end
+    if @discount == 0
+      return "There is no discount to apply."
+    end
+    @total -= @total * @discount / 100
+    return "After the discount, the total comes to $#{@total}."
+  end 
 
   def items
-  # (self).items!?
-  # returns an array containing all items that have been added
-  end
-
-  def void_last_transaction
-  # subtracts the last transaction from the total
-  end
+    item_names = []
+    @cart.each do | item_info |
+      #test expects product name * quantity...
+      for qty in 1..item_info[:quantity] 
+        item_names << item_info[:name]
+      end 
+    end 
+    item_names
+  end 
 
 end
-
-tester = CashRegister.new
-tester.add_item(4, "carrots", 4)
